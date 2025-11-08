@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // your existing deps
+    implementation 'com.github.oshi:oshi-core:6.6.5'
+    implementation 'com.beust:jcommander:1.82'
+
+    // ✅ Local JOCL JAR (explicit)
+    implementation files('libs/jocl-2.0.5.jar')
+    // ✅ Also include any other jars in libs/ automatically
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+application {
+    mainClass = 'app.CLI'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 17
+    options.encoding = 'UTF-8'
+}
+
+// (Optional) quick task to print the compile classpath for debugging
+tasks.register("printCp") {
+    doLast {
+        println "\n--- compileClasspath ---"
+        println sourceSets.main.compileClasspath.asPath
+        println "------------------------\n"
+    }
+}
